@@ -4,6 +4,7 @@ import brand from "../assets/images/icon-brand-recognition.svg";
 import customizable from "../assets/images/icon-fully-customizable.svg";
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 const track = [
   {
@@ -47,6 +48,7 @@ function Main() {
   const [error, setError] = useState({
     value: false,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleButtonText(id, shortLink) {
     navigator.clipboard.writeText(shortLink);
@@ -63,13 +65,12 @@ function Main() {
     setLink((links) => links.filter((link) => link.id !== id));
   }
 
-  // , {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/x-www-form-urlencoded",
-  //   },
-  //   body: new URLSearchParams({ url: value }).toString(),
-  // });
+  // form validation
+  function isValidUrl(url) {
+    const urlRegex = /^(https?:\/\/)?([\w\-]+\.)+[\w]{2,}(\/\S*)?$/;
+    return urlRegex.test(url);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setHasSubmitted(true);
@@ -79,18 +80,24 @@ function Main() {
       return;
     }
 
+    if (!isValidUrl(value)) {
+      toast.error("Please enter a valid URL.");
+      return;
+    }
+
     setError({ value: false });
 
     try {
+      setIsLoading(true);
       const res = await fetch(
         `https://tinyurl.com/api-create.php?url=${encodeURIComponent(value)}`
       );
       const shortUrl = await res.text();
 
       const newLink = {
-        id: userlink.length + 1,
+        id: crypto.randomUUID(),
         longLink: value,
-        shortLink: shortUrl, // Fixed this part
+        shortLink: shortUrl,
       };
 
       handleAddLink(newLink);
@@ -98,6 +105,8 @@ function Main() {
       setValue("");
     } catch (err) {
       console.error("Error shortening URL:", err);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -121,7 +130,7 @@ function Main() {
               <div
                 className={`${
                   error.value && hasSubmitted ? "border-2 border-red-500" : ""
-                } bg-white text-[#9D99A4] lg:w-[80%] w-[100%] rounded-lg outline-0 p-4`}
+                } bg-white text-[#9D99A4] lg:w-[80%] w-[100%] rounded-lg outline-0 p-4 flex gap-4`}
               >
                 <input
                   type="text"
@@ -130,6 +139,7 @@ function Main() {
                   className={`lg:w-[80%] w-[100%] outline-0`}
                   placeholder="Shorten a link here"
                 />
+                {isLoading && <p className="text-[#9D99A4]">loading....</p>}
               </div>
 
               <Button

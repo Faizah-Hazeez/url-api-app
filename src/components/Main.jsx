@@ -171,7 +171,7 @@ function Main() {
             >
               <X size={18} color="#ffffff" />
             </button>
-            <div className="flex lg:flex-row flex-col lg:items-center justify-between lg:gap-0 gap-2">
+            <div className="flex lg:flex-row flex-col lg:items-center justify-between gap-2">
               <p className="text-gray-700 break-words truncate max-w-full">
                 {link.longLink}
               </p>

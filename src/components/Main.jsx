@@ -63,6 +63,13 @@ function Main() {
     setLink((links) => links.filter((link) => link.id !== id));
   }
 
+  // , {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/x-www-form-urlencoded",
+  //   },
+  //   body: new URLSearchParams({ url: value }).toString(),
+  // });
   async function handleSubmit(e) {
     e.preventDefault();
     setHasSubmitted(true);
@@ -75,26 +82,22 @@ function Main() {
     setError({ value: false });
 
     try {
-      const res = await fetch(`https://cleanuri.com`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({ url: value }).toString(),
-      });
-      const data = await res.json();
+      const res = await fetch(
+        `https://tinyurl.com/api-create.php?url=${encodeURIComponent(value)}`
+      );
+      const shortUrl = await res.text();
+
       const newLink = {
         id: userlink.length + 1,
         longLink: value,
-        shortLink: data.result_url,
+        shortLink: shortUrl, // Fixed this part
       };
+
       handleAddLink(newLink);
       setHasSubmitted(false);
-
       setValue("");
     } catch (err) {
       console.error("Error shortening URL:", err);
-      return null;
     }
   }
 

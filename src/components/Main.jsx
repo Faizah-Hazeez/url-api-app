@@ -171,7 +171,7 @@ function Main() {
             >
               <X size={18} color="#ffffff" />
             </button>
-            <div className="flex lg:flex-row flex-col  lg:items-center   justify-between lg:gap-0 gap-2">
+            <div className="flex lg:flex-row flex-col  lg:items-center flex-wrap justify-between lg:gap-0 gap-2">
               <p className="text-gray-700">{link.longLink}</p>
               <div className="flex lg:flex-row flex-col lg:items-center lg:gap-6 gap-2">
                 <p className="text-cyan-500 ">{link.shortLink}</p>

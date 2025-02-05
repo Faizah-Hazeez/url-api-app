@@ -75,7 +75,7 @@ function Main() {
     setError({ value: false });
 
     try {
-      const res = await fetch(`/api/api/v1/shorten`, {
+      const res = await fetch(`https://cleanuri.com`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
